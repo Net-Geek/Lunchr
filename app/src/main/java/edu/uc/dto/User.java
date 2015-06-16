@@ -1,9 +1,9 @@
 package edu.uc.dto;
 
 /**
- * Created by matthewcorbett on 6/14/15.
+ * Created by Aaron on 6/16/2015.
  */
-public class UserDTO {
+public class User {
 
     public int userID;
     public int photoID;
