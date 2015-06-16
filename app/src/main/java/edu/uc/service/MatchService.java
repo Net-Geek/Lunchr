@@ -3,7 +3,7 @@ package edu.uc.service;
 /**
  * Created by Anthony on 6/16/2015.
  */
-public interface MatchController {
+public interface MatchService {
 
     /**
      * fetches a match for a person

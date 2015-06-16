@@ -3,7 +3,7 @@ package edu.uc.service;
 /**
  * Created by Tony on 6/15/2015.
  */
-public interface YelpController {
+public interface YelpService {
 
     /**
      * Returns the review that the user requested
