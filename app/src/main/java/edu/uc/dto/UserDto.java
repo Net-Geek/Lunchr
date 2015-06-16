@@ -3,7 +3,7 @@ package edu.uc.dto;
 /**
  * Created by matthewcorbett on 6/14/15.
  */
-public class UserDto {
+public class UserDTO {
 
     public int userID;
     public int photoID;
