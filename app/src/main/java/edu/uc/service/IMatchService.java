@@ -14,6 +14,7 @@ public interface IMatchService {
 
     /**
      * actually gets the match
+     * not sure what it will return yet.
      */
     public void fetchMatch();
 }
