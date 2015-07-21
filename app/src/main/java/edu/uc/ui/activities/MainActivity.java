@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (recyclerAdapter == null) {
-            recyclerAdapter = new RecyclerAdapter(listData);
+            recyclerAdapter = new RecyclerAdapter(this, listData);
             recyclerView.setAdapter(recyclerAdapter);
         }
 

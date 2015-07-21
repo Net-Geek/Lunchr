@@ -1,29 +1,41 @@
 package edu.uc.ui.adapters;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.uc.R;
+import edu.uc.ui.utils.RandomColorPicker;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.VersionViewHolder> {
     List<String> versionModels;
     Boolean isHomeList = false;
+    Context context;
 
+    public RandomColorPicker randomColorPicker = new RandomColorPicker();
     public static List<String> homeActivitiesList = new ArrayList<String>();
     public static List<String> homeActivitiesSubList = new ArrayList<String>();
     OnItemClickListener clickListener;
 
-    public RecyclerAdapter(List<String> versionModels) {
+    public RecyclerAdapter(Context context, List<String> versionModels) {
         isHomeList = false;
+        this.context = context;
         this.versionModels = versionModels;
-
     }
 
     @Override
@@ -35,12 +47,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Versio
 
     @Override
     public void onBindViewHolder(VersionViewHolder versionViewHolder, int i) {
-        if (isHomeList) {
-            versionViewHolder.title.setText(homeActivitiesList.get(i));
-            versionViewHolder.subTitle.setText(homeActivitiesSubList.get(i));
-        } else {
-            versionViewHolder.title.setText(versionModels.get(i));
-        }
+        int randomMaterialColor = randomColorPicker.generateRandomMaterialColor(context);
+        versionViewHolder.dateImage.setBackgroundColor(randomMaterialColor);
+        versionViewHolder.title.setText(versionModels.get(i));
+
     }
 
     @Override
@@ -53,6 +63,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Versio
 
     class VersionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         CardView cardItemLayout;
+        ImageView dateImage;
         TextView title;
         TextView subTitle;
 
@@ -60,6 +71,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Versio
             super(itemView);
 
             cardItemLayout = (CardView) itemView.findViewById(R.id.cardlist_item);
+            dateImage = (ImageView) itemView.findViewById(R.id.dates_image);
             title = (TextView) itemView.findViewById(R.id.dates_name);
             subTitle = (TextView) itemView.findViewById(R.id.listitem_subname);
         }

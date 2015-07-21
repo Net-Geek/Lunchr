@@ -6,6 +6,19 @@
     <color name="primary_dark">@color/blue_600</color>
     <color name="accent">@color/pink_300</color>
 
+    <integer-array name="randomColorArray">
+        <item>@color/red_500</item>
+        <item>@color/purple_500</item>
+        <item>@color/green_500</item>
+        <item>@color/orange_500</item>
+        <item>@color/yellow_500</item>
+        <item>@color/blue_500</item>
+        <item>@color/light_blue_200</item>
+        <item>@color/pink_A400</item>
+        <item>@color/indigo_A200</item>
+        <item>@color/teal_A400</item>
+    </integer-array>
+
     <color name="red_50">#FFEBEE</color>
     <color name="red_100">#FFCDD2</color>
     <color name="red_200">#EF9A9A</color>
