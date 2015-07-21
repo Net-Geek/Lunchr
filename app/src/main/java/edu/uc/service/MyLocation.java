@@ -116,15 +116,7 @@ public class MyLocation {
         }
     }
 
-    public static abstract class LocationResult{
+    public static abstract class LocationResult {
         public abstract void gotLocation(Location location);
     }
-
-
-
 }
-
-
-
-
-
