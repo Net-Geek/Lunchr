@@ -1,4 +1,4 @@
-package edu.uc.ui;
+package edu.uc.ui.activities;
 
 import android.support.design.widget.Snackbar;
 import android.os.Bundle;
