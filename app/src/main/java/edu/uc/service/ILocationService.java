@@ -6,12 +6,13 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 /**
  * Created by matthewcorbett on 7/20/15. This code was taken from http://stackoverflow.com/users/95313/fedor
  */
 
-public class MyLocation {
+public class ILocationService {
 
     Timer timer1;
     LocationManager lm;
