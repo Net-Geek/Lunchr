@@ -12,7 +12,7 @@ import java.util.List;
 
 import edu.uc.R;
 
-public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAdapter.VersionViewHolder> {
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.VersionViewHolder> {
     List<String> versionModels;
     Boolean isHomeList = false;
 
@@ -20,7 +20,7 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
     public static List<String> homeActivitiesSubList = new ArrayList<String>();
     OnItemClickListener clickListener;
 
-    public SimpleRecyclerAdapter(List<String> versionModels) {
+    public RecyclerAdapter(List<String> versionModels) {
         isHomeList = false;
         this.versionModels = versionModels;
 
@@ -60,15 +60,8 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
             super(itemView);
 
             cardItemLayout = (CardView) itemView.findViewById(R.id.cardlist_item);
-            title = (TextView) itemView.findViewById(R.id.listitem_name);
+            title = (TextView) itemView.findViewById(R.id.dates_name);
             subTitle = (TextView) itemView.findViewById(R.id.listitem_subname);
-
-            if (isHomeList) {
-                itemView.setOnClickListener(this);
-            } else {
-                subTitle.setVisibility(View.GONE);
-            }
-
         }
 
         @Override
