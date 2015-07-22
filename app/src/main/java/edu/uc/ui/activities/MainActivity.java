@@ -6,6 +6,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,14 +18,12 @@ import java.util.List;
 
 import edu.uc.R;
 import edu.uc.dto.PreviousDates;
-import edu.uc.ui.adapters.SimpleRecyclerAdapter;
+import edu.uc.ui.adapters.RecyclerAdapter;
 
 public class MainActivity extends AppCompatActivity {
     CollapsingToolbarLayout collapsingToolbar;
     RecyclerView recyclerView;
-    int toolbarScrimColor = R.attr.colorPrimary;
-    int titleScrimColor = R.color.white;
-    SimpleRecyclerAdapter simpleRecyclerAdapter;
+    RecyclerAdapter recyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +50,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.scrollableview);
 
         recyclerView.setHasFixedSize(true);
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setLayoutManager(gridLayoutManager);
 
         List<String> listData = new ArrayList<String>();
         int ct = 0;
@@ -64,9 +65,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if (simpleRecyclerAdapter == null) {
-            simpleRecyclerAdapter = new SimpleRecyclerAdapter(listData);
-            recyclerView.setAdapter(simpleRecyclerAdapter);
+        if (recyclerAdapter == null) {
+            recyclerAdapter = new RecyclerAdapter(this, listData);
+            recyclerView.setAdapter(recyclerAdapter);
         }
 
     }
