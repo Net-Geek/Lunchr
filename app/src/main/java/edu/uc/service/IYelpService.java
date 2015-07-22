@@ -40,7 +40,7 @@ public interface IYelpService {
      * @param business that you are setting
      * sets the variable to the term that you want to search for
      */
-    public void setBusinessForSearch(String business);
+    public String searchBusinessByTermAndLocation(String term, String location);
 
 
     /**
@@ -49,5 +49,16 @@ public interface IYelpService {
      * @return whether or not the business is having a deal
      */
     public boolean isThereADeal(String business);
+
+    /**
+     * Returns a JSON page of material based of the ID
+     * @param businessID the ID of the business you want to search for
+     * @return
+     */
+    public String searchByBusinessId(String businessID);
+
+    public String searchBusinessByTermLocationAndLimit(String term, String location, String limit);
+
+    public Double getRating(String businessID);
 
 }

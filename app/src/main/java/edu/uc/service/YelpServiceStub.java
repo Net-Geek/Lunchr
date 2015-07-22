@@ -45,12 +45,13 @@ public class YelpServiceStub implements IYelpService {
     }
 
     @Override
-    public void setBusinessForSearch(String business) {
+    public String searchBusinessByTermAndLocation(String business, String location) {
         if(business != null && business.length() > 0) {
             // set the business for search
         } else {
             throw new RuntimeException("Business was not valid, please try again");
         }
+        return "";
     }
 
     @Override
@@ -62,6 +63,21 @@ public class YelpServiceStub implements IYelpService {
             isDeal = true;
         }
         return isDeal;
+    }
+
+    @Override
+    public String searchByBusinessId(String businessID) {
+        return null;
+    }
+
+    @Override
+    public String searchBusinessByTermLocationAndLimit(String term, String location, String limit) {
+        return null;
+    }
+
+    @Override
+    public Double getRating(String businessID) {
+        return null;
     }
 }
 
