@@ -1,5 +1,8 @@
 package edu.uc.service;
 
+import android.util.Log;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -9,6 +12,9 @@ import org.scribe.model.Response;
 import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Tony on 7/21/2015.
@@ -29,19 +35,58 @@ public class YelpServiceImpl implements IYelpService {
     OAuthService service;
     Token accessToken;
 
-    public YelpServiceImpl(String consumerKey, String consumerSecret, String token, String tokenSecret) {
-        this.service = new ServiceBuilder().provider(TwoStepOAuth.class).apiKey(consumerKey)
-                        .apiSecret(consumerSecret).build();
-        this.accessToken = new Token(token, tokenSecret);
+    public YelpServiceImpl() {
+        this.service = new ServiceBuilder().provider(TwoStepOAuth.class).apiKey(CONSUMER_KEY)
+                        .apiSecret(CONSUMER_SECRET).build();
+        this.accessToken = new Token(TOKEN, TOKEN_SECRET);
     }
 
+    /**
+     * Will search for businesses based off of term and location given
+     * @param term for what you are searching for
+     * @param location where you are searching for
+     * @return a JSONArray that contains all the businesses that were found based off of the given criteria.
+     *         This array will be filled with HashMaps
+     */
     @Override
-    public String getReview(String business) {
-        return null;
+    public JSONArray findBusinessesByTermAndLocation(String term, String location) {
+        JSONArray businessesArray = null;
+        if((term != null && location != null) && (term.length() > 0 && location.length() > 0)) {
+            OAuthRequest request = createOAuthRequest(SEARCH_PATH + "term=" + term + "&location=" + location);
+            String businesses = sendRequestAndGetResponse(request);
+            JSONObject queried = queryJSON(businesses);
+            businessesArray = (JSONArray) queried.get("businesses");
+        }
+        return businessesArray;
     }
 
+    /**
+     * Returns the business ID for a business specifically to use for the Yelp API
+     * @param business should be a HashMap that contains all the criteria for one business.
+     *                 You can find a bunch of businesses by calling the findBusinessesByTermAndLocation
+     *                 and then use one of the indexes, which is a HashMap for one business, and use that
+     *                 as the parameters here.
+     * @return the business ID
+     */
     @Override
-    public void setLimitReviews(Integer limit) { }
+    public String getBusinessID(HashMap business){
+        String businessID = null;
+        if(!business.isEmpty()) {
+            businessID = (String) business.get("id");
+        }
+        return businessID;
+    }
+
+    /**
+     * Actually goes out and gets the JSON text of the business
+     * @param businessID the ID of the business you want to search for
+     * @return String representation of the JSON
+     */
+    @Override
+    public String searchByBusinessId(String businessID) {
+        OAuthRequest request = createOAuthRequest(BUSINESS_PATH + "/" + businessID);
+        return sendRequestAndGetResponse(request);
+    }
 
     @Override
     public boolean isRestaurantOnYelp(String business) {
@@ -55,29 +100,34 @@ public class YelpServiceImpl implements IYelpService {
     }
 
     /**
-     * This can give you an idea of how many businesses are in the area that you are located
-     * based off of zip code, address, city, or state.
-     * @param term
-     * @param location
-     * @return
+     * Gets the rating of the business
+     * @param businessID business ID you want the rating for
+     * @return a double representing the business rating
      */
     @Override
-    public String searchBusinessByTermAndLocation(String term, String location) {
-        OAuthRequest request = createOAuthRequest(SEARCH_PATH + "term=" + term + "&location=" + location);
-        return sendRequestAndGetResponse(request);
-    }
-
-    @Override
-    public String searchBusinessByTermLocationAndLimit(String term, String location, String limit) {
-        OAuthRequest request = createOAuthRequest(SEARCH_PATH + "term=" + term + "&location=" + location + "&limit=" + limit);
-        return sendRequestAndGetResponse(request);
-    }
-
-    @Override
     public Double getRating(String businessID) {
-        String business = searchByBusinessId(businessID);
-        JSONObject queried = queryJSON(business);
-        return (Double) queried.get("rating");
+        Double ratingValue = null;
+        if(businessID != null && businessID.length() > 0) {
+            String business = searchByBusinessId(businessID);
+            JSONObject queried = queryJSON(business);
+            ratingValue = (Double) queried.get("rating");
+        }
+        return ratingValue;
+    }
+
+    /**
+     * Returns a url for the image of the rating
+     * @param businessID Business you want the rating for
+     * @return a url of the image
+     */
+    public String getRatingImage(String businessID) {
+        String imageUrl = null;
+        if(businessID != null && businessID.length() > 0) {
+            String business = searchByBusinessId(businessID);
+            JSONObject queried = queryJSON(business);
+            imageUrl = (String) queried.get("rating_img_url_large");
+        }
+        return imageUrl;
     }
 
     @Override
@@ -85,11 +135,31 @@ public class YelpServiceImpl implements IYelpService {
         return false;
     }
 
+    /**
+     * Returns only one review because that's how many are included in the original JSON
+     * @param businessID business you want a review for
+     * @return the review of the business based off of customers.
+     */
     @Override
-    public String searchByBusinessId(String businessID) {
-        OAuthRequest request = createOAuthRequest(BUSINESS_PATH + "/" + businessID);
-        return sendRequestAndGetResponse(request);
+    public String getReview(String businessID) {
+        String review = null;
+        String business = searchByBusinessId(businessID);
+        if(businessID != null && businessID.length() > 0) {
+            JSONObject queried = queryJSON(business);
+            Map<Object, Object> reviewMap;
+            try {
+                JSONArray arrayReview = (JSONArray) queried.get("reviews");
+                reviewMap = (Map<Object, Object>) arrayReview.get(0);
+                review = (String) reviewMap.get("excerpt");
+            } catch (Exception e) {
+                Log.w("getReview", e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return review;
     }
+
+    /////////////////////////////////////  PRIVATE METHODS  /////////////////////////////////////////
 
     private OAuthRequest createOAuthRequest(String path) {
         OAuthRequest request = new OAuthRequest(Verb.GET, "http://" + API_HOST + path);
@@ -103,13 +173,7 @@ public class YelpServiceImpl implements IYelpService {
         return response.getBody();
     }
 
-    /**
-     * This will convert the JSON Page into a HashMap with the key being the label and
-     * the value the actual value in the JSON page.
-     * @param JSONBody actual JSON body page
-     * @return the response which will be a HashMap
-     */
-    public static JSONObject queryJSON(String JSONBody) {
+    private JSONObject queryJSON(String JSONBody) {
         JSONParser parser = new JSONParser();
         JSONObject response = null;
         try {
