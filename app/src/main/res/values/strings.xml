@@ -7,4 +7,10 @@
     <string name="navigate_date_content_description">navigate to date location</string>
     <string name="message_date_content_description">message your date</string>
     <string name="archive_date_content_description">archive this date</string>
+
+    <!-- test -->
+    <string name="sheet_item_pressed">Item pressed</string>
+    <string name="create_a_date_content_description">Create a date.</string>
+    <string name="search_for_dates_content_description">Search for dates.</string>
+
 </resources>

@@ -22,6 +22,11 @@ import java.util.List;
 import edu.uc.R;
 import edu.uc.ui.utils.RandomColorPicker;
 
+/**
+ * Created by Aaron on 7/1/2015.
+ *
+ * Adapter to popular recycler view
+ */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.VersionViewHolder> {
     List<String> versionModels;
     Boolean isHomeList = false;
