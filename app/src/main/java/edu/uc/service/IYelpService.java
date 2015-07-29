@@ -1,5 +1,10 @@
 package edu.uc.service;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import java.util.HashMap;
+
 /**
  * Created by Tony on 6/15/2015.
  */
@@ -11,14 +16,6 @@ public interface IYelpService {
      * @return currently don't know what this will return but when we figure it out we will change it
      */
     public String getReview(String business);
-
-
-    /**
-     * Sets the number of reviews that you want returned
-     * @param limit number of reviews you want to limit
-     */
-    public void setLimitReviews(Integer limit);
-
 
     /**
      * decides if a business has been claimed on Yelp
@@ -37,10 +34,12 @@ public interface IYelpService {
 
 
     /**
-     * @param business that you are setting
-     * sets the variable to the term that you want to search for
+     *
+     * @param term specific term you are looking for
+     * @param location location you want the search to include
+     * @return array of businesses based off of the location and term provided
      */
-    public void setBusinessForSearch(String business);
+    public JSONArray findBusinessesByTermAndLocation(String term, String location);
 
 
     /**
@@ -49,5 +48,33 @@ public interface IYelpService {
      * @return whether or not the business is having a deal
      */
     public boolean isThereADeal(String business);
+
+    /**
+     * Returns a JSON page of material based of the ID
+     * @param businessID the ID of the business you want to search for
+     * @return
+     */
+    public String searchByBusinessId(String businessID);
+
+    /**
+     * Gets the rating of the business
+     * @param businessID ID of the business
+     * @return a Double value determining the rating of the business
+     */
+    public Double getRating(String businessID);
+
+    /**
+     * Gets the url of the image rating specified on the Yelp page.
+     * @param businessID ID of the business you want the rating for
+     * @return url of the rating
+     */
+    public String getRatingImage(String businessID);
+
+    /**
+     * Gets the business ID of the business
+     * @param business HashMap that contains all the criteria for one business
+     * @return the business ID
+     */
+    public String getBusinessID(HashMap business);
 
 }

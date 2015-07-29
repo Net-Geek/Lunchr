@@ -1,5 +1,9 @@
 package edu.uc.service;
 
+import org.json.simple.JSONArray;
+
+import java.util.HashMap;
+
 /**
  * Created by Tony on 6/21/2015.
  */
@@ -13,15 +17,6 @@ public class YelpServiceStub implements IYelpService {
            review = "";
         }
         return review;
-    }
-
-    @Override
-    public void setLimitReviews(Integer limit) {
-        if(limit != null) {
-            // set the limit to the number of reviews specified
-        } else {
-            throw new RuntimeException("Limit was not valid, please try again.");
-        }
     }
 
     @Override
@@ -45,12 +40,13 @@ public class YelpServiceStub implements IYelpService {
     }
 
     @Override
-    public void setBusinessForSearch(String business) {
+    public JSONArray findBusinessesByTermAndLocation(String business, String location) {
         if(business != null && business.length() > 0) {
             // set the business for search
         } else {
             throw new RuntimeException("Business was not valid, please try again");
         }
+        return new JSONArray();
     }
 
     @Override
@@ -62,6 +58,26 @@ public class YelpServiceStub implements IYelpService {
             isDeal = true;
         }
         return isDeal;
+    }
+
+    @Override
+    public String searchByBusinessId(String businessID) {
+        return null;
+    }
+
+    @Override
+    public Double getRating(String businessID) {
+        return null;
+    }
+
+    @Override
+    public String getRatingImage(String businessID) {
+        return null;
+    }
+
+    @Override
+    public String getBusinessID(HashMap business) {
+        return null;
     }
 }
 

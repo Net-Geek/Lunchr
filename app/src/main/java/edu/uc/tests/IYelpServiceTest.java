@@ -2,59 +2,79 @@ package edu.uc.tests;
 
 import junit.framework.TestCase;
 
+import org.json.simple.JSONArray;
+
+import java.util.HashMap;
+
 import edu.uc.service.IYelpService;
-import edu.uc.service.YelpServiceStub;
+import edu.uc.service.YelpServiceImpl;
+//import edu.uc.service.YelpServiceStub;
 
 /**
  * Created by Tony on 7/13/2015.
  */
-public class IYelpServiceTest  extends TestCase {
+public class IYelpServiceTest extends TestCase {
     IYelpService yelpService;
 
     public void setUp() throws Exception {
-        yelpService = new YelpServiceStub();
+        yelpService = new YelpServiceImpl();
     }
 
-    public void testGetReview() throws Exception {
-        assertNull(yelpService.getReview(""));
-        assertEquals("", yelpService.getReview("review"));
+    public void testFindBusinessesByTermAndLocation() throws Exception {
+        JSONArray businesses = yelpService.findBusinessesByTermAndLocation("food", "cincinnati");
+        assertTrue(20 == businesses.size());
+
+        assertNull(yelpService.findBusinessesByTermAndLocation("", ""));
     }
 
-    public void testSetLimitReviews() throws Exception {
-        try {
-            yelpService.setLimitReviews(null);
-        } catch (Exception e) {
-            assertEquals("Limit was not valid, please try again.", e.getMessage());
-        }
+    public void testGetBusinessID() throws Exception {
+        JSONArray businesses = yelpService.findBusinessesByTermAndLocation("skyline", "cincinnati");
+        Object business = businesses.get(0);
+        assertEquals("skyline-chili-cincinnati-8", yelpService.getBusinessID((HashMap)business));
 
-        yelpService.setLimitReviews(5);
+        assertNull(yelpService.getBusinessID(new HashMap()));
+    }
+
+    public void testSearchByBusinessID() throws Exception {
+        assertNotNull(yelpService.searchByBusinessId(businessID()));
     }
 
     public void testIsRestaurantOnYelp() throws Exception {
         assertFalse(yelpService.isRestaurantOnYelp(""));
-        assertTrue(yelpService.isRestaurantOnYelp("Skyline"));
     }
 
     public void testSetLocation() throws Exception {
-        try {
-            yelpService.setLocation(null, null);
-        } catch (Exception e) {
-            assertEquals("The longitude and latitude were not valid, please try again", e.getMessage());
-        }
+        yelpService.setLocation(4.0, 4.0);
     }
 
-    public void testSetBusinessForSearch() throws Exception {
-        try {
-            yelpService.setBusinessForSearch(null);
-        } catch (Exception e) {
-            assertEquals("Business was not valid, please try again", e.getMessage());
-        }
+    public void testGetRating() throws Exception {
+        assertEquals(4.0, yelpService.getRating(businessID()));
 
-        yelpService.setBusinessForSearch("Skyline");
+        assertNull(yelpService.getRating(""));
+    }
+
+    public void testGetRatingImage() throws Exception {
+        assertEquals("http://s3-media2.fl.yelpcdn.com/assets/2/www/img/ccf2b76faa2c/ico/stars/v1/stars_large_4.png", yelpService.getRatingImage(businessID()));
+
+        assertNull(yelpService.getRatingImage(""));
     }
 
     public void testIsThereADeal() throws Exception {
-        assertFalse(yelpService.isThereADeal(null));
-        assertTrue(yelpService.isThereADeal("Skyline"));
+        assertFalse(yelpService.isThereADeal(""));
+    }
+
+
+    public void testGetReview() throws Exception {
+        assertEquals("Can I tell you how much we LOVE Skyline Chili????\n" +
+                "\n" +
+                "My kids had never tried it.  Althought we really wanted to stop in Cinci to have Graeters, I decided I...", yelpService.getReview(businessID()));
+
+        assertNull(yelpService.getReview(""));
+    }
+
+    private String businessID() {
+        JSONArray businesses = yelpService.findBusinessesByTermAndLocation("skyline", "cincinnati");
+        Object business = businesses.get(0);
+        return yelpService.getBusinessID((HashMap)business);
     }
 }
