@@ -4,15 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,21 +23,22 @@ import java.util.List;
 import edu.uc.R;
 import edu.uc.dto.PreviousDates;
 import edu.uc.ui.adapters.RecyclerAdapter;
+import edu.uc.ui.utils.RecyclerViewScrollListener;
 import edu.uc.ui.utils.RecyclerViewTouchListener;
+import edu.uc.ui.widgets.ControllableAppBarLayout;
 import edu.uc.ui.widgets.Fab;
 import edu.uc.ui.widgets.MaterialSheetFab;
 
 /**
  * Created by Aaron on 7/1/2015.
  *
- * homepage activity
+ * Homepage activity
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     CollapsingToolbarLayout collapsingToolbar;
     RecyclerView recyclerView;
     RecyclerAdapter recyclerAdapter;
-    AppBarLayout appBarLayout;
-
+    ControllableAppBarLayout controllableAppBarLayout;
     private MaterialSheetFab materialSheetFab;
     private int statusBarColor;
 
@@ -63,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        controllableAppBarLayout = (ControllableAppBarLayout) findViewById(R.id.appBar);
+
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("Dates");
         collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
@@ -71,9 +71,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView = (RecyclerView) findViewById(R.id.scrollableview);
         recyclerView.setHasFixedSize(true);
         recyclerView.setOnTouchListener(new RecyclerViewTouchListener(materialSheetFab));
+        recyclerView.addOnScrollListener(new RecyclerViewScrollListener(controllableAppBarLayout));
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(gridLayoutManager);
 
         List<String> listData = new ArrayList<String>();
@@ -95,8 +95,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        appBarLayout = (AppBarLayout) findViewById(R.id.appBar);
-        appBarLayout.addOnOffsetChangedListener(this);
     }
 
     @Override
@@ -106,11 +104,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-        Log.i("offset", i + "");
     }
 
     /**

@@ -4,10 +4,12 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
-        <android.support.design.widget.AppBarLayout
+        <edu.uc.ui.widgets.ControllableAppBarLayout
             android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="192dp"
@@ -40,7 +42,7 @@
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
             </android.support.design.widget.CollapsingToolbarLayout>
-        </android.support.design.widget.AppBarLayout>
+        </edu.uc.ui.widgets.ControllableAppBarLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/scrollableview"
