@@ -18,20 +18,26 @@ public interface IYelpService {
     public String getReview(String business);
 
     /**
-     * decides if a business has been claimed on Yelp
-     * @param business that you are searching for
-     * @return boolean indicating the above statement
+     * get the address of the business
+     * @param businessID ID of the business you want the address from
+     * @return the address
      */
-    public boolean isRestaurantOnYelp(String business);
+    public String getAddress(String businessID);
 
+        /**
+         * Gets the phone number of the business
+         * @param businessID id of the business you want the number from
+         * @return the phone number
+         */
+    public String getPhoneNumber(String businessID);
 
     /**
-     * @param longitude the longitude of the current location
-     * @param latitude the latitude of the current location
-     * sets the location of where you want to search
+     * gets the name of the business based off of the businessID.  Will be used mainly to
+     * display the name of business on the UI
+     * @param businessID businessID of the business
+     * @return the name of the business
      */
-    public void setLocation(Double longitude, Double latitude);
-
+    public String getBusinessName(String businessID);
 
     /**
      *
@@ -40,14 +46,6 @@ public interface IYelpService {
      * @return array of businesses based off of the location and term provided
      */
     public JSONArray findBusinessesByTermAndLocation(String term, String location);
-
-
-    /**
-     * see's if there is a deal for the business on that particular day
-     * @param business that you are seeing if there is a deal or not
-     * @return whether or not the business is having a deal
-     */
-    public boolean isThereADeal(String business);
 
     /**
      * Returns a JSON page of material based of the ID

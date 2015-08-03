@@ -24,8 +24,6 @@ public class YelpServiceImpl implements IYelpService {
     private static final String API_HOST = "api.yelp.com";
     private static final String SEARCH_PATH = "/v2/search?";
     private static final String BUSINESS_PATH = "/v2/business";
-    private static Double LONGITUDE = 0.0;
-    private static Double LATITUDE = 0.0;
 
     private static final String CONSUMER_KEY = "Q--QTZexuMoLJ-mtRNxQvQ";
     private static final String CONSUMER_SECRET = "ZhuWE6w9F8LZKj0Z2dHT4-Mu2Mw";
@@ -88,17 +86,6 @@ public class YelpServiceImpl implements IYelpService {
         return sendRequestAndGetResponse(request);
     }
 
-    @Override
-    public boolean isRestaurantOnYelp(String business) {
-        return false;
-    }
-
-    @Override
-    public void setLocation(Double longitude, Double latitude) {
-        this.LONGITUDE = longitude;
-        this.LATITUDE = latitude;
-    }
-
     /**
      * Gets the rating of the business
      * @param businessID business ID you want the rating for
@@ -116,6 +103,59 @@ public class YelpServiceImpl implements IYelpService {
     }
 
     /**
+     * Gets the phone number of the business
+     * @param businessID id of the business you want the number from
+     * @return the phone number
+     */
+    @Override
+    public String getPhoneNumber(String businessID) {
+        String number = null;
+        if(businessID != null && businessID.length() > 0) {
+            String business = searchByBusinessId(businessID);
+            JSONObject queried = queryJSON(business);
+            number = (String) queried.get("display_phone");
+        }
+        return number;
+    }
+
+    /**
+     * gets the name of the business based off of the businessID.  Will be used mainly to
+     * display the name of business on the UI
+     * @param businessID businessID of the business
+     * @return the name of the business
+     */
+    @Override
+    public String getBusinessName(String businessID) {
+        String businessName = null;
+        if(businessID != null && businessID.length() > 0) {
+            String business = searchByBusinessId(businessID);
+            JSONObject queried = queryJSON(business);
+            businessName = (String) queried.get("name");
+        }
+        return businessName;
+    }
+
+    /**
+     * get the address of the business
+     * @param businessID ID of the business you want the address from
+     * @return the address
+     */
+    @Override
+    public String getAddress(String businessID) {
+        String address = null;
+        if(businessID != null && businessID.length() > 0) {
+            String business = searchByBusinessId(businessID);
+            JSONObject queried = queryJSON(business);
+            JSONObject location = (JSONObject) queried.get("location");
+            JSONArray addressArray = (JSONArray) location.get("address");
+            //there will only be one address here.
+            address = (String) addressArray.get(0);
+        }
+        return address;
+    }
+
+
+    /**
      * Returns a url for the image of the rating
      * @param businessID Business you want the rating for
      * @return a url of the image
@@ -128,11 +168,6 @@ public class YelpServiceImpl implements IYelpService {
             imageUrl = (String) queried.get("rating_img_url_large");
         }
         return imageUrl;
-    }
-
-    @Override
-    public boolean isThereADeal(String business) {
-        return false;
     }
 
     /**

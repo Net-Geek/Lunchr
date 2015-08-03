@@ -30,21 +30,13 @@ public class IYelpServiceTest extends TestCase {
     public void testGetBusinessID() throws Exception {
         JSONArray businesses = yelpService.findBusinessesByTermAndLocation("skyline", "cincinnati");
         Object business = businesses.get(0);
-        assertEquals("skyline-chili-cincinnati-8", yelpService.getBusinessID((HashMap)business));
+        assertEquals("skyline-chili-cincinnati-8", yelpService.getBusinessID((HashMap) business));
 
         assertNull(yelpService.getBusinessID(new HashMap()));
     }
 
     public void testSearchByBusinessID() throws Exception {
         assertNotNull(yelpService.searchByBusinessId(businessID()));
-    }
-
-    public void testIsRestaurantOnYelp() throws Exception {
-        assertFalse(yelpService.isRestaurantOnYelp(""));
-    }
-
-    public void testSetLocation() throws Exception {
-        yelpService.setLocation(4.0, 4.0);
     }
 
     public void testGetRating() throws Exception {
@@ -59,17 +51,21 @@ public class IYelpServiceTest extends TestCase {
         assertNull(yelpService.getRatingImage(""));
     }
 
-    public void testIsThereADeal() throws Exception {
-        assertFalse(yelpService.isThereADeal(""));
+    //only check for null here because the review could change, thus causing the test to fail
+    public void testGetReview() throws Exception {
+        assertNull(yelpService.getReview(""));
     }
 
+    public void testGetBusinessName() throws Exception {
+        assertEquals("Skyline Chili", yelpService.getBusinessName(businessID()));
+    }
 
-    public void testGetReview() throws Exception {
-        assertEquals("Can I tell you how much we LOVE Skyline Chili????\n" +
-                "\n" +
-                "My kids had never tried it.  Althought we really wanted to stop in Cinci to have Graeters, I decided I...", yelpService.getReview(businessID()));
+    public void testGetAddress() throws Exception {
+        assertEquals("290 Ludlow Ave", yelpService.getAddress(businessID()));
+    }
 
-        assertNull(yelpService.getReview(""));
+    public void testGetPhoneNumber() throws Exception {
+        assertEquals("+1-513-221-2142", yelpService.getPhoneNumber(businessID()));
     }
 
     private String businessID() {

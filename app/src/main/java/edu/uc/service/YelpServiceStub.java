@@ -20,23 +20,30 @@ public class YelpServiceStub implements IYelpService {
     }
 
     @Override
-    public boolean isRestaurantOnYelp(String business) {
-        boolean isOnYelp = false;
-        if(business != null && business.length() > 0) {
-            // see if business is on yelp
-            // isOnYelp will probably call something that will return whether or not the restaurant is on Yelp
-            isOnYelp = true;
+    public String getAddress(String businessID) {
+        String address = null;
+        if(businessID != null && businessID.length() > 0) {
+            address = "555 Smith Street";
         }
-        return isOnYelp;
+        return address;
     }
 
     @Override
-    public void setLocation(Double longitude, Double latitude) {
-        if(longitude != null && latitude != null) {
-            // set the Location of the person
-        } else {
-            throw new RuntimeException("The longitude and latitude were not valid, please try again");
+    public String getPhoneNumber(String businessID) {
+        String number = null;
+        if(businessID != null && businessID.length() > 0) {
+            number = "555-555-5555";
         }
+        return number;
+    }
+
+    @Override
+    public String getBusinessName(String businessID) {
+        String name = null;
+        if(businessID != null && businessID.length() > 0) {
+            name = "LaRosa's";
+        }
+        return name;
     }
 
     @Override
@@ -50,34 +57,39 @@ public class YelpServiceStub implements IYelpService {
     }
 
     @Override
-    public boolean isThereADeal(String business) {
-        boolean isDeal = false;
-        if(business != null && business.length() > 0) {
-            // check to see if there is a deal
-            // isDeal will probably call something that will return whether or not there is a deal
-            isDeal = true;
-        }
-        return isDeal;
-    }
-
-    @Override
     public String searchByBusinessId(String businessID) {
-        return null;
+        String business = null;
+        if(businessID != null && businessID.length() > 0) {
+            business = "Skyline";
+        }
+        return business;
     }
 
     @Override
     public Double getRating(String businessID) {
-        return null;
+        Double rating = null;
+        if(businessID != null && businessID.length() > 0) {
+            rating = 5.0;
+        }
+        return rating;
     }
 
     @Override
     public String getRatingImage(String businessID) {
-        return null;
+        String imageURL = null;
+        if(businessID != null && businessID.length() > 0) {
+            imageURL = "https://www.blahblahblah.com/image.jpg";
+        }
+        return imageURL;
     }
 
     @Override
     public String getBusinessID(HashMap business) {
-        return null;
+        String businessID = null;
+        if(!business.isEmpty()) {
+            businessID = "skyline-chili-cincinnati-8";
+        }
+        return businessID;
     }
 }
 
