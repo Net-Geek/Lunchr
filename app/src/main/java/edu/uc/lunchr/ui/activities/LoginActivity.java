@@ -47,6 +47,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     /* A dialog that is presented until the Firebase authentication finished. */
     private ProgressDialog mAuthProgressDialog;
+    private ProgressDialog mRegProgressDialog;
 
     /* A reference to the Firebase */
     private Firebase mFirebaseRef;
@@ -102,8 +103,16 @@ public class LoginActivity extends AppCompatActivity implements
      *              PASSWORD               *
      ***************************************/
     private Button mPasswordLoginButton;
+    private Button mSignUpSubmit;
     private AppCompatEditText mEmailEditText;
     private AppCompatEditText mPasswordEditText;
+
+    private AppCompatEditText mEmailSignUpEditText;
+    private AppCompatEditText mPasswordSignUpEditText;
+    private AppCompatEditText mFirstNameSignUpEditText;
+    private AppCompatEditText mLastNameSignUpEditText;
+    private AppCompatEditText mPhoneNumberSignUpEditText;
+    private AppCompatEditText mBioSignUpEditText;
 
     private CardView mSignUpCardView;
     private CardView mSignInCardView;
@@ -185,8 +194,24 @@ public class LoginActivity extends AppCompatActivity implements
             }
         });
 
+        mSignUpSubmit = (Button) findViewById(R.id.sign_up_submit);
+        mSignUpSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                registerUser();
+            }
+        });
+
+
         mEmailEditText = (AppCompatEditText) findViewById(R.id.email);
         mPasswordEditText = (AppCompatEditText) findViewById(R.id.password);
+
+        mEmailSignUpEditText = (AppCompatEditText) findViewById(R.id.email_sign_up);
+        mPasswordSignUpEditText = (AppCompatEditText) findViewById(R.id.password_sign_up);
+        mFirstNameSignUpEditText = (AppCompatEditText) findViewById(R.id.first_name_sign_up);
+        mLastNameSignUpEditText = (AppCompatEditText) findViewById(R.id.last_name_sign_up);
+        mPhoneNumberSignUpEditText = (AppCompatEditText) findViewById(R.id.phone_number_sign_up);
+        mBioSignUpEditText = (AppCompatEditText) findViewById(R.id.bio_sign_up);
 
         mSignInCardView = (CardView) findViewById(R.id.sign_in_cardlist);
         mSignUpCardView = (CardView) findViewById(R.id.sign_up_cardlist);
@@ -207,6 +232,11 @@ public class LoginActivity extends AppCompatActivity implements
         mAuthProgressDialog.setMessage("Signing you in...");
         mAuthProgressDialog.setCancelable(false);
         mAuthProgressDialog.show();
+
+        mRegProgressDialog = new ProgressDialog(this);
+        mRegProgressDialog.setTitle("Loading");
+        mRegProgressDialog.setMessage("Registering your new account...");
+        mRegProgressDialog.setCancelable(false);
 
         mAuthStateListener = new Firebase.AuthStateListener() {
             @Override
@@ -335,10 +365,10 @@ public class LoginActivity extends AppCompatActivity implements
             mAuthProgressDialog.show();
             if (provider.equals("twitter")) {
                 // if the provider is twitter, we pust pass in additional options, so use the options endpoint
-                mFirebaseRef.authWithOAuthToken(provider, options, new AuthResultHandler(provider));
+                mFirebaseRef.authWithOAuthToken(provider, options, new StaleAuthResultHandler(provider));
             } else {
                 // if the provider is not twitter, we just need to pass in the oauth_token
-                mFirebaseRef.authWithOAuthToken(provider, options.get("oauth_token"), new AuthResultHandler(provider));
+                mFirebaseRef.authWithOAuthToken(provider, options.get("oauth_token"), new StaleAuthResultHandler(provider));
             }
         }
     }
@@ -375,11 +405,49 @@ public class LoginActivity extends AppCompatActivity implements
     /**
      * Utility class for authentication results
      */
-    private class AuthResultHandler implements Firebase.AuthResultHandler {
+    private class FreshAuthResultHandler implements Firebase.AuthResultHandler {
+
+        String firstName;
+        String lastName;
+        String phoneNumber;
+        String bio;
+
+        public FreshAuthResultHandler(String firstName, String lastName, String phoneNumber, String bio) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.phoneNumber = phoneNumber;
+            this.bio = bio;
+        }
+
+        @Override
+        public void onAuthenticated(AuthData authData) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("firstName", firstName);
+            map.put("lastName", lastName);
+            map.put("phoneNumber", phoneNumber);
+            map.put("bio", bio);
+            mFirebaseRef.child("users").child(authData.getUid()).setValue(map);
+
+            mAuthProgressDialog.hide();
+            Log.i("fresh auth successful", "true");
+            setAuthenticatedUser(authData);
+        }
+
+        @Override
+        public void onAuthenticationError(FirebaseError firebaseError) {
+            mAuthProgressDialog.hide();
+            showErrorDialog(firebaseError.getMessage());
+        }
+    }
+
+    /**
+     * Utility class for authentication results
+     */
+    private class StaleAuthResultHandler implements Firebase.AuthResultHandler {
 
         private final String provider;
 
-        public AuthResultHandler(String provider) {
+        public StaleAuthResultHandler(String provider) {
             this.provider = provider;
         }
 
@@ -393,7 +461,7 @@ public class LoginActivity extends AppCompatActivity implements
         @Override
         public void onAuthenticationError(FirebaseError firebaseError) {
             mAuthProgressDialog.hide();
-            showErrorDialog(firebaseError.toString());
+            showErrorDialog(firebaseError.getMessage());
         }
     }
 
@@ -404,7 +472,7 @@ public class LoginActivity extends AppCompatActivity implements
     private void onFacebookAccessTokenChange(AccessToken token) {
         if (token != null) {
             mAuthProgressDialog.show();
-            mFirebaseRef.authWithOAuthToken("facebook", token.getToken(), new AuthResultHandler("facebook"));
+            mFirebaseRef.authWithOAuthToken("facebook", token.getToken(), new StaleAuthResultHandler("facebook"));
         } else {
             // Logged out of Facebook and currently authenticated with Firebase using Facebook, so do a logout
             if (this.mAuthData != null && this.mAuthData.getProvider().equals("facebook")) {
@@ -472,7 +540,7 @@ public class LoginActivity extends AppCompatActivity implements
                 mGoogleLoginClicked = false;
                 if (token != null) {
                     /* Successfully got OAuth token, now login with Google */
-                    mFirebaseRef.authWithOAuthToken("google", token, new AuthResultHandler("google"));
+                    mFirebaseRef.authWithOAuthToken("google", token, new StaleAuthResultHandler("google"));
                 } else if (errorMessage != null) {
                     mAuthProgressDialog.hide();
                     showErrorDialog(errorMessage);
@@ -527,6 +595,36 @@ public class LoginActivity extends AppCompatActivity implements
         String password = mPasswordEditText.getEditableText().toString();
 
         mAuthProgressDialog.show();
-        mFirebaseRef.authWithPassword(email, password, new AuthResultHandler("password"));
+        mFirebaseRef.authWithPassword(email, password, new StaleAuthResultHandler("password"));
+    }
+
+    public void registerUser(){
+        final String email = mEmailSignUpEditText.getEditableText().toString();
+        final String password = mPasswordSignUpEditText.getEditableText().toString();
+        final String firstName = mFirstNameSignUpEditText.getEditableText().toString();
+        final String lastName = mLastNameSignUpEditText.getEditableText().toString();
+        final String phoneNumber = mPhoneNumberSignUpEditText.getEditableText().toString();
+        final String bio = mBioSignUpEditText .getEditableText().toString();
+
+        if(!email.isEmpty()&&!password.isEmpty()&&!firstName.isEmpty()&&!lastName.isEmpty()&&!phoneNumber.isEmpty()&&!bio.isEmpty()){
+            mRegProgressDialog.show();
+
+            mFirebaseRef.createUser(email,password,new Firebase.ResultHandler() {
+                @Override
+                public void onSuccess() {
+                    mRegProgressDialog.hide();
+                    mAuthProgressDialog.show();
+                    mFirebaseRef.authWithPassword(email, password, new FreshAuthResultHandler(firstName,lastName,phoneNumber,bio));
+                }
+
+                @Override
+                public void onError(FirebaseError firebaseError) {
+                    mRegProgressDialog.hide();
+                    showErrorDialog(firebaseError.getMessage());
+                }
+            });
+        } else {
+            showErrorDialog("Please fill out all fields.");
+        }
     }
 }

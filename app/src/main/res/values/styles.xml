@@ -69,6 +69,10 @@
         <item name="android:background">@drawable/default_button_background</item>
     </style>
 
+    <style name="Button.Location" parent="android:style/Widget.Material.Button">
+        <item name="android:background">@drawable/location_button_background</item>
+    </style>
+
     <style name="Button.Facebook" parent="android:style/Widget.Material.Button">
         <item name="android:background">@drawable/facebook_button_background</item>
     </style>

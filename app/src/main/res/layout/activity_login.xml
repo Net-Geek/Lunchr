@@ -65,6 +65,7 @@
             android:visibility="visible"
             card_view:cardCornerRadius="@dimen/cardview_default_elevation"
             card_view:cardElevation="@dimen/cardview_default_elevation"
+            android:animateLayoutChanges="true"
             tools:visibility="visible">
 
             <LinearLayout
@@ -178,11 +179,12 @@
             android:visibility="gone"
             card_view:cardCornerRadius="@dimen/cardview_default_elevation"
             card_view:cardElevation="@dimen/cardview_default_elevation"
-            tools:visibility="gone">
+            tools:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:animateLayoutChanges="true"
                 android:orientation="vertical">
 
                 <LinearLayout
