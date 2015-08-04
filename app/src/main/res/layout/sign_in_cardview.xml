@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cardlist_item"
+    android:id="@+id/sign_in_cardlist"
     android:layout_width="match_parent"
     android:layout_height="@dimen/default_card_height"
     android:layout_margin="@dimen/card_margin"

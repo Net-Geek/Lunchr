@@ -68,7 +68,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Versio
         public VersionViewHolder(View itemView) {
             super(itemView);
 
-            cardItemLayout = (CardView) itemView.findViewById(R.id.cardlist_item);
+            cardItemLayout = (CardView) itemView.findViewById(R.id.sign_in_cardlist);
             dateImage = (ImageView) itemView.findViewById(R.id.dates_image);
             title = (TextView) itemView.findViewById(R.id.dates_name);
             subTitle = (TextView) itemView.findViewById(R.id.listitem_subname);

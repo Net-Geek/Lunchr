@@ -4,22 +4,24 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
-import com.facebook.login.widget.LoginButton;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -28,7 +30,6 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 
@@ -43,12 +44,6 @@ public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
-
-    /* *************************************
-     *              GENERAL                *
-     ***************************************/
-    /* TextView that is used to display information about the logged in user */
-    private TextView mLoggedInStatusTextView;
 
     /* A dialog that is presented until the Firebase authentication finished. */
     private ProgressDialog mAuthProgressDialog;
@@ -107,6 +102,16 @@ public class LoginActivity extends AppCompatActivity implements
      *              PASSWORD               *
      ***************************************/
     private Button mPasswordLoginButton;
+    private AppCompatEditText mEmailEditText;
+    private AppCompatEditText mPasswordEditText;
+
+    private CardView mSignUpCardView;
+    private CardView mSignInCardView;
+
+    private Button mSignUpButton;
+    private Button mSignInButton;
+
+    private boolean activityStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,10 +185,18 @@ public class LoginActivity extends AppCompatActivity implements
             }
         });
 
+        mEmailEditText = (AppCompatEditText) findViewById(R.id.email);
+        mPasswordEditText = (AppCompatEditText) findViewById(R.id.password);
+
+        mSignInCardView = (CardView) findViewById(R.id.sign_in_cardlist);
+        mSignUpCardView = (CardView) findViewById(R.id.sign_up_cardlist);
+
+        mSignInButton = (Button) findViewById(R.id.signInToggle);
+        mSignUpButton = (Button) findViewById(R.id.signUpToggle);
+
         /* *************************************
          *               GENERAL               *
          ***************************************/
-        mLoggedInStatusTextView = (TextView) findViewById(R.id.login_status);
 
         /* Create the Firebase ref that is used for all authentication with Firebase */
         mFirebaseRef = new Firebase(getResources().getString(R.string.firebase_url));
@@ -191,7 +204,7 @@ public class LoginActivity extends AppCompatActivity implements
         /* Setup the progress dialog that is displayed later when authenticating with Firebase */
         mAuthProgressDialog = new ProgressDialog(this);
         mAuthProgressDialog.setTitle("Loading");
-        mAuthProgressDialog.setMessage("Authenticating with Firebase...");
+        mAuthProgressDialog.setMessage("Signing you in...");
         mAuthProgressDialog.setCancelable(false);
         mAuthProgressDialog.show();
 
@@ -268,6 +281,25 @@ public class LoginActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    public void signInOnClick(View v){
+        mSignInButton.setTypeface(Typeface.DEFAULT_BOLD);
+        mSignUpButton.setTypeface(Typeface.DEFAULT);
+        mSignInCardView.setVisibility(View.VISIBLE);
+        mSignUpCardView.setVisibility(View.GONE);
+    }
+
+    public void signUpOnClick(View v){
+        mSignUpButton.setTypeface(Typeface.DEFAULT_BOLD);
+        mSignInButton.setTypeface(Typeface.DEFAULT);
+        mSignUpCardView.setVisibility(View.VISIBLE);
+        mSignInCardView.setVisibility(View.GONE);
+    }
+
+    public void forgotPasswordOnClick(View view) {
+        Toast.makeText(this, "Coming soon..", Toast.LENGTH_SHORT).show();
+    }
+
+
     /**
      * Unauthenticate from Firebase and from providers where necessary.
      */
@@ -315,34 +347,14 @@ public class LoginActivity extends AppCompatActivity implements
      * Once a user is logged in, take the mAuthData provided from Firebase and "use" it.
      */
     private void setAuthenticatedUser(AuthData authData) {
-        if (authData != null) {
-            /* Hide all the login buttons */
-            mFacebookLoginButton.setVisibility(View.GONE);
-            mGoogleLoginButton.setVisibility(View.GONE);
-            mTwitterLoginButton.setVisibility(View.GONE);
-            mPasswordLoginButton.setVisibility(View.GONE);
-            mLoggedInStatusTextView.setVisibility(View.VISIBLE);
-            /* show a provider specific status text */
-            String name = null;
-            if (authData.getProvider().equals("facebook")
-                    || authData.getProvider().equals("google")
-                    || authData.getProvider().equals("twitter")) {
-                name = (String) authData.getProviderData().get("displayName");
-            } else if (authData.getProvider().equals("password")) {
-                name = authData.getUid();
-            } else {
-                Log.e(TAG, "Invalid provider: " + authData.getProvider());
-            }
-            if (name != null) {
-                mLoggedInStatusTextView.setText("Logged in as " + name + " (" + authData.getProvider() + ")");
-            }
+        if (authData != null && !activityStarted) {
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            mainIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(mainIntent);
+            activityStarted = true;
+            finish();
         } else {
-            /* No authenticated user show all the login buttons */
-            mFacebookLoginButton.setVisibility(View.VISIBLE);
-            mGoogleLoginButton.setVisibility(View.VISIBLE);
-            mTwitterLoginButton.setVisibility(View.VISIBLE);
-            mPasswordLoginButton.setVisibility(View.VISIBLE);
-            mLoggedInStatusTextView.setVisibility(View.GONE);
+
         }
         this.mAuthData = authData;
         /* invalidate options menu to hide/show the logout button */
@@ -357,7 +369,6 @@ public class LoginActivity extends AppCompatActivity implements
                 .setTitle("Error")
                 .setMessage(message)
                 .setPositiveButton(android.R.string.ok, null)
-                .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
 
@@ -512,7 +523,10 @@ public class LoginActivity extends AppCompatActivity implements
      **************************************
      */
     public void loginWithPassword() {
+        String email = mEmailEditText.getEditableText().toString();
+        String password = mPasswordEditText.getEditableText().toString();
+
         mAuthProgressDialog.show();
-        mFirebaseRef.authWithPassword("test@firebaseuser.com", "test1234", new AuthResultHandler("password"));
+        mFirebaseRef.authWithPassword(email, password, new AuthResultHandler("password"));
     }
 }

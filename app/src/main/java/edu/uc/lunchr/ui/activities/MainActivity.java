@@ -14,7 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
+import com.google.android.gms.plus.Plus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +43,19 @@ public class MainActivity extends AppCompatActivity {
     ControllableAppBarLayout controllableAppBarLayout;
     private MaterialSheetFab materialSheetFab;
 
+    /* A reference to the Firebase */
+    private Firebase mFirebaseRef;
+    /* Data from the authenticated user */
+    private AuthData mAuthData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupFab();
+
+        mFirebaseRef = new Firebase(getResources().getString(R.string.firebase_url));
+        mAuthData = mFirebaseRef.getAuth();
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         setSupportActionBar(toolbar);
@@ -137,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
+            case R.id.action_logout:
+                logout();
                 return true;
             case R.id.action_settings:
                 return true;
@@ -151,5 +162,16 @@ public class MainActivity extends AppCompatActivity {
         int primary = getResources().getColor(R.color.primary);
         collapsingToolbar.setContentScrimColor(palette.getMutedColor(primary));
         collapsingToolbar.setStatusBarScrimColor(palette.getDarkMutedColor(primaryDark));
+    }
+
+    private void logout() {
+        if (this.mAuthData != null) {
+            /* logout of Firebase */
+            mFirebaseRef.unauth();
+            Intent backToLogin = new Intent(this, LoginActivity.class);
+            backToLogin.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(backToLogin);
+            finish();
+        }
     }
 }
