@@ -5,67 +5,58 @@ package edu.uc.dto;
  */
 public class User {
 
-    public int userID;
-    public int photoID;
-    public int distance;
-    public double latitude;
-    public double longitude;
-    public String userName;
-    public String foodPreference;
+    public String userID;
+    public String bio;
+    public String firstName;
+    public String lastName;
+    public String phoneNumber;
+    public String photoUrl;
 
-    public int getUserID() {
-        return userID;
-    }
-
-    public void setUserID(int userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 
-    public int getPhotoID() {
-        return photoID;
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
-    public void setPhotoID(int photoID) {
-        this.photoID = photoID;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public int getDistance() {
-        return distance;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public void setDistance(int distance) {
-        this.distance = distance;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public String getUserID() {
+        return userID;
     }
 
-    public double getLongitude() {
-        return longitude;
+    public String getBio() {
+        return bio;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public String getFoodPreference() {
-        return foodPreference;
-    }
-
-    public void setFoodPreference(String foodPreference) {
-        this.foodPreference = foodPreference;
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 }
