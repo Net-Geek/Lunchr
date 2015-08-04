@@ -1,5 +1,7 @@
 package edu.uc.ui.activities;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -34,7 +36,7 @@ import edu.uc.ui.widgets.MaterialSheetFab;
  *
  * Homepage activity
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
     CollapsingToolbarLayout collapsingToolbar;
     RecyclerView recyclerView;
     RecyclerAdapter recyclerAdapter;
@@ -50,16 +52,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         setSupportActionBar(toolbar);
-
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                R.drawable.header);
-
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(Palette palette) {
-                applyPalette(palette);
-            }
-        });
 
         controllableAppBarLayout = (ControllableAppBarLayout) findViewById(R.id.appBar);
 
@@ -119,33 +111,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Create material sheet FAB
         materialSheetFab = new MaterialSheetFab<>(fab, sheetView, overlay, sheetColor, fabColor);
-
-        // Set material sheet event listener
-        materialSheetFab.setEventListener(new MaterialSheetFabEventListener() {
-            @Override
-            public void onShowSheet() {
-                // Save current status bar color
-                statusBarColor = getStatusBarColor();
-                // Set darker status bar color to match the dim overlay
-                setStatusBarColor(getResources().getColor(R.color.theme_primary_dark2));
-            }
-
-            @Override
-            public void onHideSheet() {
-                // Restore status bar color
-                setStatusBarColor(statusBarColor);
-            }
-        });
-
-        // Set material sheet item click listeners
-        findViewById(R.id.createActionButton).setOnClickListener(this);
-        findViewById(R.id.searchActionButton).setOnClickListener(this);
     }
 
-    @Override
-    public void onClick(View v) {
-        Toast.makeText(this, R.string.sheet_item_pressed, Toast.LENGTH_SHORT).show();
+    public void onCreateDateClick(View v) {
         materialSheetFab.hideSheet();
+        Intent createDateIntent = new Intent(this, CreateDateActivity.class);
+        startActivity(createDateIntent);
     }
 
     private int getStatusBarColor() {

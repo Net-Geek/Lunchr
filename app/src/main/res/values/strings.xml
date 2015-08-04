@@ -12,5 +12,8 @@
     <string name="sheet_item_pressed">Item pressed</string>
     <string name="create_a_date_content_description">Create a date.</string>
     <string name="search_for_dates_content_description">Search for dates.</string>
+    <string name="title_activity_create_date">CreateDateActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>
