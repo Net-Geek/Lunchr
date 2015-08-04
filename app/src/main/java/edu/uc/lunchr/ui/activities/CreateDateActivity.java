@@ -65,4 +65,8 @@ public class CreateDateActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void OnPickDateTimeClick(View view) {
+
+    }
 }
