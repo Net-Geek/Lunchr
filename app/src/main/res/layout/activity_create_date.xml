@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="edu.uc.ui.activities.CreateDateActivity">
+    tools:context="edu.uc.lunchr.ui.activities.CreateDateActivity">
 
 
     <Button

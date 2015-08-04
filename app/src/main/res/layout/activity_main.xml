@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         >
 
-        <edu.uc.ui.widgets.ControllableAppBarLayout
+        <edu.uc.lunchr.ui.widgets.ControllableAppBarLayout
             android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="192dp"
@@ -42,7 +42,7 @@
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
             </android.support.design.widget.CollapsingToolbarLayout>
-        </edu.uc.ui.widgets.ControllableAppBarLayout>
+        </edu.uc.lunchr.ui.widgets.ControllableAppBarLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/scrollableview"
@@ -54,7 +54,7 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <!--Floating action button -->
-    <edu.uc.ui.widgets.Fab
+    <edu.uc.lunchr.ui.widgets.Fab
         android:id="@+id/fab"
         style="@style/Widget.MaterialSheetFab.Fab"
         android:fitsSystemWindows="true"
