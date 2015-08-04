@@ -34,5 +34,6 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="create_new_date">Create new date</string>
     <string name="pick_a_place">Pick a place</string>
+    <string name="pick_a_date">Pick a date and time</string>
 
 </resources>
