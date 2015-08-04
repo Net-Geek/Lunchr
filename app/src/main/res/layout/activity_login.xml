@@ -88,6 +88,9 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
+                        android:src="@drawable/ic_facebook"
+                        android:tint="@color/white"
+                        android:scaleType="center"
                         android:text="@string/login_with_facebook" />
 
                     <ImageButton
@@ -98,6 +101,9 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
+                        android:src="@drawable/ic_twitter"
+                        android:tint="@color/white"
+                        android:scaleType="center"
                         android:text="@string/login_with_twitter" />
 
                     <ImageButton
@@ -108,6 +114,9 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
+                        android:src="@drawable/ic_googleplus"
+                        android:tint="@color/white"
+                        android:scaleType="center"
                         android:text="@string/login_with_google" />
                 </LinearLayout>
 
