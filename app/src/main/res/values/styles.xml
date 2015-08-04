@@ -64,4 +64,16 @@
         <item name="android:textSize">@dimen/snackbar_textsize</item>
         <item name="android:textAllCaps">true</item>
     </style>
+
+    <style name="Button.Facebook" parent="android:style/Widget.Material.Button">
+        <item name="android:background">@drawable/facebook_button_background</item>
+    </style>
+
+    <style name="Button.Twitter" parent="android:style/Widget.Material.Button">
+        <item name="android:background">@drawable/twitter_button_background</item>
+    </style>
+
+    <style name="Button.Google" parent="android:style/Widget.Material.Button">
+        <item name="android:background">@drawable/google_button_background</item>
+    </style>
 </resources>

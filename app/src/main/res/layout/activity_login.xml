@@ -40,30 +40,30 @@
 
             <ImageButton
                 android:id="@+id/login_with_facebook"
-                android:background="@color/light_blue_800"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:text="@string/login_with_facebook"/>
+                android:text="@string/login_with_facebook"
+                style="@style/Button.Facebook"/>
 
             <ImageButton
                 android:id="@+id/login_with_twitter"
-                android:background="@color/light_blue_600"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:text="@string/login_with_twitter"/>
+                android:text="@string/login_with_twitter"
+                style="@style/Button.Twitter"/>
 
             <ImageButton
                 android:id="@+id/login_with_google"
-                android:background="@color/red_500"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:text="@string/login_with_google"/>
+                android:text="@string/login_with_google"
+                style="@style/Button.Google"/>
         </LinearLayout>
 
         <Button
