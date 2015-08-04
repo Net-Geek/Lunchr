@@ -5,16 +5,11 @@ package edu.uc.dto;
  */
 public class User {
 
-    public String userID;
     public String bio;
     public String firstName;
     public String lastName;
     public String phoneNumber;
     public String photoUrl;
-
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
 
     public void setBio(String bio) {
         this.bio = bio;
@@ -34,10 +29,6 @@ public class User {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
-    }
-
-    public String getUserID() {
-        return userID;
     }
 
     public String getBio() {
